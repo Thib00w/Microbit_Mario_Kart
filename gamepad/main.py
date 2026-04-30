@@ -3,7 +3,12 @@ import radio as rd
 import music as mu
 
 MON_ID = "GP1"
+MON_TYPE = "GP"
 DEST = "KT1"
+
+def rd_envoie(dest: str, values: list):
+    msg = f"{MON_TYPE};{MON_ID},{dest},{values}"
+    rd.send(msg)
 
 def décode(message: str):
     splt_msg = message.slpit(';')
@@ -25,6 +30,7 @@ rd.config(group=22)
 # Boucle fonctionnement
 while True:
     x = pin1.read_analog()
-    y = pin2.read_analog()
-    rd.send(f"{x};{y}")
+    A = button_a.is_pressed()
+    B = button_b.is_pressed()
+    rd.send(f"{x};{A};{B}")
     sleep(50)
