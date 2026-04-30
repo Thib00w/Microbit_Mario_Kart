@@ -32,5 +32,6 @@ while True:
     x = pin1.read_analog()
     A = button_a.is_pressed()
     B = button_b.is_pressed()
-    rd.send(f"{x};{A};{B}")
+    lst = [x, A, B]
+    rd_envoie(DEST, lst)
     sleep(50)
