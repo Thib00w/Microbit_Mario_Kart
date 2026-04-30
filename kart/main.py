@@ -2,6 +2,7 @@ from microbit import *
 import radio as rd
 import music as mu
 
+MON_TYPE = "KT"
 MON_ID = "KT1"
 MON_GAMEPAD = "GP1"
 ARBITRE = "ARB"
@@ -10,7 +11,7 @@ ARBITRE = "ARB"
 rd.on()
 rd.config(group=22)
 
-def décode(message: str):
+def rd_décode(message: str):
     splt_msg = message.slpit(';')
     if len(splt_msg) == 4:
         type = splt_msg[0]
@@ -22,6 +23,10 @@ def décode(message: str):
         raise "Longeur message invalide"
     else:
         raise "Erreur"
+
+def rd_envoie(dest: str, values: list):
+    msg = f"{MON_TYPE};{MON_ID},{dest},{values}"
+    rd.send(msg)
     
 def right(x):
     if x >= 512:
@@ -38,15 +43,9 @@ def left(x):
 
 while True:
     # récupère les donnée joysticks
-    message = rd.receive()
-    if message:
-        valeurs = message.slpit(";")
-        x = valeurs[0]
-        y = valeurs[1]
-        # Contrôle moteur
-        if x >= 512:
-            val_mot = right(x) if not None else 200
-
-
-
-    sleep(50)
+    rd_msg = None
+    rd_msg = rd.receive()
+    msg = rd_décode(rd_msg)
+    if msg is not None and (msg[1] == MON_GAMEPAD or \
+                            msg[1] == ARBITRE):
+        values = msg[3]
