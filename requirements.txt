@@ -1,0 +1,3 @@
+microfs==1.4.5
+pyserial==3.5
+uflash==2.0.0
