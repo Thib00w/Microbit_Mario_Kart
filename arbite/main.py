@@ -2,7 +2,7 @@ from microbit import *
 import radio
 
 #initialisation de l'emmeteur radio
-radio.config(group = 0 , power = 7)
+radio.config(group = 22 , power = 7)
 radio.on 
 
 MON_ID = "ARB"
