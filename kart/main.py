@@ -1,6 +1,5 @@
 from microbit import *
 import radio as rd
-import music as mu
 
 MON_TYPE = "KT"
 MON_ID = "KT1"
@@ -12,40 +11,54 @@ rd.on()
 rd.config(group=22)
 
 def rd_décode(message: str):
-    splt_msg = message.slpit(';')
+    splt_msg = message.split(';')
     if len(splt_msg) == 4:
-        type = splt_msg[0]
+        type_ = splt_msg[0]
         emetteur = splt_msg[1]
         destinateur = splt_msg[2]
-        values = list(splt_msg[3])
-        return type, emetteur, destinateur, values
-    elif len(splt_msg) != 4:
-        raise "Longeur message invalide"
+        values = splt_msg[3]
+        return type_, emetteur, destinateur, values
     else:
-        raise "Erreur"
+        raise ValueError("Longueur message invalide")
 
 def rd_envoie(dest: str, values: list):
-    msg = f"{MON_TYPE};{MON_ID},{dest},{values}"
+    msg = str(MON_TYPE) + ";" + str(MON_ID) + ";" + str(dest) + ";" + str(values)
     rd.send(msg)
-    
-def right(x):
-    if x >= 512:
-        x - 512
-        percent = x*100/512
-        return 200 * percent/100
-    return None
 
-def left(x):
-    if x<= 512:
-        percent = x*100/512
-        return 200*percent/100
-    return None 
+def moteurs(x, b, a):
+    if not b:
+        i2c.write(0x10, bytes([0x00, 0, 0]))
+        i2c.write(0x10, bytes([0x02, 0, 0]))
+        return
+
+    vitesse_base = 255 if a else 100  # boost si A appuyé
+
+    if x > 542:
+        coeff = (x - 542) / 481
+        gauche = vitesse_base
+        droit = int(vitesse_base * (1 - coeff))
+    elif x < 482:
+        coeff = (482 - x) / 482
+        gauche = int(vitesse_base * (1 - coeff))
+        droit = vitesse_base
+    else:
+        gauche = vitesse_base
+        droit = vitesse_base
+
+    i2c.write(0x10, bytes([0x00, 0, gauche]))
+    i2c.write(0x10, bytes([0x02, 0, droit]))
 
 while True:
-    # récupère les donnée joysticks
-    rd_msg = None
     rd_msg = rd.receive()
-    msg = rd_décode(rd_msg)
-    if msg is not None and (msg[1] == MON_GAMEPAD or \
-                            msg[1] == ARBITRE):
-        values = msg[3]
+    if rd_msg is not None:
+        try:
+            msg = rd_décode(rd_msg)
+            if msg[1] == MON_GAMEPAD or msg[1] == ARBITRE:
+                values = msg[3].strip('[]').split(',')
+                x = int(values[0].strip())
+                b = values[2].strip() == "True"
+                a = values[1].strip() == "True"
+                display.show("A" if a else ".")  # debug
+                moteurs(x, b, a)
+        except:
+            pass
