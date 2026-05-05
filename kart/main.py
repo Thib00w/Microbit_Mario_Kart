@@ -58,7 +58,7 @@ while True:
                 x = int(values[0].strip())
                 b = values[2].strip() == "True"
                 a = values[1].strip() == "True"
-                display.show("A" if a else ".")  # debug
+                display.show("A" if a else ".")  
                 moteurs(x, b, a)
         except:
             pass
