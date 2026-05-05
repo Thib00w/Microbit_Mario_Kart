@@ -2,16 +2,16 @@ from microbit import *
 import radio
 
 #initialisation de l'emmeteur radio
-radio.config(group = 0 , power = 7)
+radio.config(group = 22 , power = 7)
 radio.on 
 
-Mon_id = "ARB"
+MON_ID = "ARB"
 lst_kart = ["KT1", "KT2", "KT3", "KT4"]
 lst_gamepad = ["GP1", "GP2", "GP3", "GP4"]
 
 
 def envoi_message(destinataire, type, valeur):
-    lst = [type, Mon_id, destinataire, valeur]
+    lst = [type, MON_ID, destinataire, valeur]
     msg = str(lst)
     radio.send(msg)
 
@@ -19,11 +19,11 @@ def envoi_message(destinataire, type, valeur):
 
 def envoie_tout_le_monde(type, valeur):
     for e in lst_kart:
-        lst = [type, Mon_id, e, valeur]
+        lst = [type, MON_ID, e, valeur]
         msg = str(lst)
         radio.send(msg)
     for e in lst_gamepad:
-        lst = [type, Mon_id, e, valeur]
+        lst = [type, MON_ID, e, valeur]
         msg = str(lst)
         radio.send(msg)
 
