@@ -1,9 +1,9 @@
 from microbit import *
 import radio as rd
 
-MON_ID = "GP1"
+MON_ID = "GP2"
 MON_TYPE = "GP"
-DEST = "KT1"
+DEST = "KT2"
 rd.on()
 rd.config(group=22)
 

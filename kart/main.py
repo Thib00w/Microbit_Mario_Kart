@@ -2,8 +2,8 @@ from microbit import *
 import radio as rd
 
 MON_TYPE = "KT"
-MON_ID = "KT1"
-MON_GAMEPAD = "GP1"
+MON_ID = "KT2"
+MON_GAMEPAD = "GP2"
 ARBITRE = "ARB"
 
 # Config radio
@@ -26,12 +26,13 @@ def rd_envoie(dest: str, values: list):
     rd.send(msg)
 
 def moteurs(x, b, a):
-    if not b:
+    if not b and not a:
         i2c.write(0x10, bytes([0x00, 0, 0]))
         i2c.write(0x10, bytes([0x02, 0, 0]))
         return
+        
 
-    vitesse_base = 255 if a else 100  # boost si A appuyé
+    vitesse_base = 100 
 
     if x > 542:
         coeff = (x - 542) / 481
@@ -45,8 +46,12 @@ def moteurs(x, b, a):
         gauche = vitesse_base
         droit = vitesse_base
 
-    i2c.write(0x10, bytes([0x00, 0, gauche]))
-    i2c.write(0x10, bytes([0x02, 0, droit]))
+    if a:
+        i2c.write(0x10, bytes([0x00, 1, gauche]))
+        i2c.write(0x10, bytes([0x02, 1, droit]))
+    else:
+        i2c.write(0x10, bytes([0x00, 0, gauche]))
+        i2c.write(0x10, bytes([0x02, 0, droit]))
 
 while True:
     rd_msg = rd.receive()
