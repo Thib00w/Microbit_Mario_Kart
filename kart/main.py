@@ -7,7 +7,7 @@ MON_ID = "KT2"
 MON_GAMEPAD = "GP2"
 ARBITRE = "ARB"
 
-# addresse des moteur de macqueen 
+# addresse des moteur de macqueen
 ADDR = 0x10
 
 # Config radio
@@ -66,18 +66,6 @@ while True:
                 # Si A pressé (reculer)
                 if a:
                     if x < 512:
-                        i2c.write(ADDR, bytes([0x00, 2, spd_mtr_turn(x, boost)]))
-                        i2c.write(ADDR, bytes([0x02, 2, spd]))
-                    elif x > 512:
-                        i2c.write(ADDR, bytes([0x00, 2, spd]))
-                        i2c.write(ADDR, bytes([0x02, 2, spd_mtr_turn(x, boost)]))
-                    else:
-                        i2c.write(ADDR, bytes([0x00, 2, spd]))
-                        i2c.write(ADDR, bytes([0x02, 2, spd]))
-                # Config moteur en fonction joystick en marche avant
-                # Si b préssé (avancé)
-                if b:
-                    if x < 512:
                         i2c.write(ADDR, bytes([0x00, 1, spd_mtr_turn(x, boost)]))
                         i2c.write(ADDR, bytes([0x02, 1, spd]))
                     elif x > 512:
@@ -86,6 +74,18 @@ while True:
                     else:
                         i2c.write(ADDR, bytes([0x00, 1, spd]))
                         i2c.write(ADDR, bytes([0x02, 1, spd]))
+                # Config moteur en fonction joystick en marche avant
+                # Si b préssé (avancé)
+                if b:
+                    if x < 512:
+                        i2c.write(ADDR, bytes([0x00, 0, spd_mtr_turn(x, boost)]))
+                        i2c.write(ADDR, bytes([0x02, 0, spd]))
+                    elif x > 512:
+                        i2c.write(ADDR, bytes([0x00, 0, spd]))
+                        i2c.write(ADDR, bytes([0x02, 0, spd_mtr_turn(x, boost)]))
+                    else:
+                        i2c.write(ADDR, bytes([0x00, 0, spd]))
+                        i2c.write(ADDR, bytes([0x02, 0, spd]))
             sleep(50)
              
         except Exception as e:
