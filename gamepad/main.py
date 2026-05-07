@@ -1,9 +1,9 @@
 from microbit import *
 import radio as rd
 
-MON_ID = "GP2"
+MON_ID = "GP1"
 MON_TYPE = "GP"
-DEST = "KT2"
+DEST = "KT1"
 rd.on()
 rd.config(group=22)
 
@@ -31,4 +31,4 @@ while True:
     C = pin13.read_digital()
     lst = [x, A, B, C]
     rd_envoie(DEST, lst)
-    sleep(50)
+    sleep(10)

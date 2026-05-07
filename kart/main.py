@@ -2,8 +2,8 @@ from microbit import *
 import radio as rd
 
 MON_TYPE = "KT"
-MON_ID = "KT2"
-MON_GAMEPAD = "GP2"
+MON_ID = "KT1"
+MON_GAMEPAD = "GP1"
 ARBITRE = "ARB"
 
 # Config radio
@@ -32,7 +32,7 @@ def moteurs(x, b, a):
         return
         
 
-    vitesse_base = 100 
+    vitesse_base = 100
 
     if x > 542:
         coeff = (x - 542) / 481
@@ -53,6 +53,14 @@ def moteurs(x, b, a):
         i2c.write(0x10, bytes([0x00, 0, gauche]))
         i2c.write(0x10, bytes([0x02, 0, droit]))
 
+def detection_ligne():
+    if pin14.read_digital() == 0:
+        return True
+    elif pin13.read_digital() == 0:
+        return True
+    else:
+        return False 
+
 while True:
     rd_msg = rd.receive()
     if rd_msg is not None:
@@ -62,8 +70,7 @@ while True:
                 values = msg[3].strip('[]').split(',')
                 x = int(values[0].strip())
                 b = values[2].strip() == "True"
-                a = values[1].strip() == "True"
-                display.show("A" if a else ".")  
+                a = values[1].strip() == "True" 
                 moteurs(x, b, a)
         except:
             pass

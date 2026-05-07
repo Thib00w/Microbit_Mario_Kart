@@ -42,6 +42,8 @@ def décode(message: str):
         raise "Erreur"
 
 
+
+
 while True:
     message = radio.receive()
     if message:
